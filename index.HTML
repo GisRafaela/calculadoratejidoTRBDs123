@@ -1,6 +1,7 @@
 <html>
+
 <head>
-</body>
+  </body>
   <style>
     /* Estilos del botón */
     #abrir-calculadora {
@@ -78,37 +79,30 @@
   </style>
 
   <!-- Botón para abrir modal -->
-  <button id="abrir-calculadora">Abrir Calculadora TRBD</button>
+  <button id="abrir-calculadora">Abrir Calculadora 01-TRBD</button>
 
   <!-- Modal -->
   <div id="modal-calculadora" class="modal">
     <div class="modal-content">
       <button class="cerrar-btn" aria-label="Cerrar">&times;</button>
-      <h3 style="color:#fffff; text-align:center; margin-bottom:12px;">Calculadora Urbanística – Tejido TRBD</h3>
+      <h3 style="color:#fffff; text-align:center; margin-bottom:12px;">Calculadora Urbanística – 01-Tejido TRBD</h3>
       <label for="m2-modal" style="font-weight:600;">Superficie del terreno (m²):</label>
       <input id="m2-modal" type="number" min="0" placeholder="Ej: 700" oninput="calcularUrbanismoTRBD(this.value)" />
       <div id="resultado-trbd" style="margin-top:18px; font-size:15px; line-height:1.5;"></div>
     </div>
   </div>
-
+  </body>
   <script>
     const abrirBtn = document.getElementById('abrir-calculadora');
     const modal = document.getElementById('modal-calculadora');
     const cerrarBtn = modal.querySelector('.cerrar-btn');
     abrirBtn.addEventListener('click', () => {
       modal.classList.add('active');
-      // Opcional: limpiar input y resultado cuando se abre
       document.getElementById('m2-modal').value = '';
       document.getElementById('resultado-trbd').innerHTML = '';
     });
     cerrarBtn.addEventListener('click', () => {
       modal.classList.remove('active');
-    });
-    // También cerrar modal al hacer clic fuera del contenido
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.classList.remove('active');
-      }
     });
 
     function calcularUrbanismoTRBD(m2) {
@@ -126,15 +120,18 @@
       const superficieConstruible = m2 * FOT;
       const superficieLibre = (Nofos - FOS) * m2 * PVEA;
       const superficielibremin = m2 - superficieCubierta;
+      
       document.getElementById("resultado-trbd").innerHTML = `
-      <p><strong>Necesario M2 (FOS):</strong> ${superficieCubierta.toFixed(2)} m²</p>
-      <p><strong>Necesario M2 (FOT):</strong> ${superficieConstruible.toFixed(2)} m²</p>
+      <p><strong>Necesario M² (FOS):</strong> ${superficieCubierta.toFixed(2)} m²</p>
+      <p><strong>Necesario M² (FOT):</strong> ${superficieConstruible.toFixed(2)} m²</p>
       <p><strong>PVEA:</strong> ${superficieLibre.toFixed(2)} m²</p>
       <p><strong>Sup. Libre Mínima:</strong> ${superficielibremin.toFixed(2)} m²</p>
+      <p><strong>TOLERANCIA +- 2.5</strong></p>
     `;
+      
     }
   </script>
-</body>
+
 </head>
 
 </html>

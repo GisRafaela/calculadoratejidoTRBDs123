@@ -1,0 +1,140 @@
+<html>
+<head>
+</body>
+  <style>
+    /* Estilos del botón */
+    #abrir-calculadora {
+      padding: 10px 20px;
+      background-color: #5cb873;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* Estilos del modal */
+    .modal {
+      display: none;
+      /* oculto por defecto */
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    /* Contenido del modal (tarjeta) */
+    .modal-content {
+      background-color: #5cb873;
+      border: 3px solid #367f47;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0);
+      position: relative;
+    }
+
+    /* Botón de cerrar */
+    .cerrar-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: transparent;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: #367f47;
+      font-weight: bold;
+    }
+
+    /* Reusar estilos input y resultado */
+    #resultado-trbd p {
+      background-color: #367f47;
+      border-left: 5px solid #5cb873;
+      padding: 8px 12px;
+      border-radius: 5px;
+      margin-bottom: 8px;
+    }
+
+    input[type='number'] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      border: 2px solid #367f47;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+  </style>
+
+  <!-- Botón para abrir modal -->
+  <button id="abrir-calculadora">Abrir Calculadora TRBD</button>
+
+  <!-- Modal -->
+  <div id="modal-calculadora" class="modal">
+    <div class="modal-content">
+      <button class="cerrar-btn" aria-label="Cerrar">&times;</button>
+      <h3 style="color:#fffff; text-align:center; margin-bottom:12px;">Calculadora Urbanística – Tejido TRBD</h3>
+      <label for="m2-modal" style="font-weight:600;">Superficie del terreno (m²):</label>
+      <input id="m2-modal" type="number" min="0" placeholder="Ej: 700" oninput="calcularUrbanismoTRBD(this.value)" />
+      <div id="resultado-trbd" style="margin-top:18px; font-size:15px; line-height:1.5;"></div>
+    </div>
+  </div>
+
+  <script>
+    const abrirBtn = document.getElementById('abrir-calculadora');
+    const modal = document.getElementById('modal-calculadora');
+    const cerrarBtn = modal.querySelector('.cerrar-btn');
+    abrirBtn.addEventListener('click', () => {
+      modal.classList.add('active');
+      // Opcional: limpiar input y resultado cuando se abre
+      document.getElementById('m2-modal').value = '';
+      document.getElementById('resultado-trbd').innerHTML = '';
+    });
+    cerrarBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+    // También cerrar modal al hacer clic fuera del contenido
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+      }
+    });
+
+    function calcularUrbanismoTRBD(m2) {
+      m2 = parseFloat(m2);
+      if (isNaN(m2) || m2 <= 0) {
+        document.getElementById("resultado-trbd").innerHTML =
+          "<p>Ingrese una superficie válida.</p>";
+        return;
+      }
+      const FOS = 0.5;
+      const FOT = 1.0;
+      const PVEA = 0.7;
+      const Nofos = 1;
+      const superficieCubierta = m2 * FOS;
+      const superficieConstruible = m2 * FOT;
+      const superficieLibre = (Nofos - FOS) * m2 * PVEA;
+      const superficielibremin = m2 - superficieCubierta;
+      document.getElementById("resultado-trbd").innerHTML = `
+      <p><strong>Necesario M2 (FOS):</strong> ${superficieCubierta.toFixed(2)} m²</p>
+      <p><strong>Necesario M2 (FOT):</strong> ${superficieConstruible.toFixed(2)} m²</p>
+      <p><strong>PVEA:</strong> ${superficieLibre.toFixed(2)} m²</p>
+      <p><strong>Sup. Libre Mínima:</strong> ${superficielibremin.toFixed(2)} m²</p>
+    `;
+    }
+  </script>
+</body>
+</head>
+
+</html>
